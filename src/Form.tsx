@@ -30,16 +30,25 @@ export interface FormProps<Values = any> extends BaseFormProps {
   onFieldsChange?: Callbacks<Values>['onFieldsChange'];
   onFinish?: Callbacks<Values>['onFinish'];
   onFinishFailed?: Callbacks<Values>['onFinishFailed'];
+  // 触发验证时机，默认是 onChange 时候触发验证
   validateTrigger?: string | string[] | false;
   preserve?: boolean;
 }
 
+/**
+ * Form 组件控制只有进行一次渲染
+ * Sean props 变化会 rerender ，那 onFinish 函数是否有要求呢？是否要求 useCallback or static function
+ * @param param0
+ * @param ref
+ * @returns
+ */
 const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
   {
     name,
     initialValues,
     fields,
     form,
+    // 保留 value when  field removed  Sean ? field removed 是哪种情况
     preserve,
     children,
     component: Component = 'form',
@@ -53,6 +62,8 @@ const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
   }: FormProps,
   ref,
 ) => {
+  // 外部需要再包一层 Provider
+  //
   const formContext: FormContextProps = React.useContext(FormContext);
 
   // We customize handle event since Context will makes all the consumer re-render:
@@ -83,6 +94,7 @@ const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
     ...formContext.validateMessages,
     ...validateMessages,
   });
+  // 设置回调函数并对部分进行函数进行拦截处理
   setCallbacks({
     onValuesChange,
     onFieldsChange: (changedFields: FieldData[], ...rest) => {
@@ -118,6 +130,7 @@ const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
 
   // Prepare children by `children` type
   let childrenNode: React.ReactNode;
+  // 表单联动
   const childrenRenderProps = typeof children === 'function';
   if (childrenRenderProps) {
     const values = formInstance.getFieldsValue(true);
@@ -127,8 +140,10 @@ const Form: React.ForwardRefRenderFunction<FormInstance, FormProps> = (
   }
 
   // Not use subscribe when using render props
+  // 表单联动时候不使用
   useSubscribe(!childrenRenderProps);
 
+  // 复制表单数据，自定义控制更新时机
   // Listen if fields provided. We use ref to save prev data here to avoid additional render
   const prevFieldsRef = React.useRef<FieldData[] | undefined>();
   React.useEffect(() => {

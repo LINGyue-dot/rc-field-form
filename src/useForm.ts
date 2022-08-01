@@ -125,6 +125,7 @@ export class FormStore {
     return null;
   };
 
+  // Sean 订阅？
   private useSubscribe = (subscribable: boolean) => {
     this.subscribable = subscribable;
   };
@@ -181,6 +182,7 @@ export class FormStore {
     this.validateMessages = validateMessages;
   };
 
+  // Sean ?
   private setPreserve = (preserve?: boolean) => {
     this.preserve = preserve;
   };

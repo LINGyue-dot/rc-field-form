@@ -144,9 +144,11 @@ class Field extends React.Component<InternalFieldProps, FieldState> implements F
   constructor(props: InternalFieldProps) {
     super(props);
 
+    // Sean 为什么会穿 fieldContext ?
     // Register on init
     if (props.fieldContext) {
       const { getInternalHooks }: InternalFormInstance = props.fieldContext;
+      // begin
       const { initEntityValue } = getInternalHooks(HOOK_MARK);
       initEntityValue(this);
     }

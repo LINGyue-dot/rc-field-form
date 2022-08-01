@@ -34,6 +34,9 @@ const FormContext = React.createContext<FormContextProps>({
   unregisterForm: () => {},
 });
 
+type FnType = (name: string) => void;
+const fn: FnType = () => {};
+
 const FormProvider: React.FunctionComponent<FormProviderProps> = ({
   validateMessages,
   onFormChange,

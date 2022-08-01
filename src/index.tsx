@@ -10,6 +10,7 @@ import FieldContext from './FieldContext';
 import ListContext from './ListContext';
 import useWatch from './useWatch';
 
+// 再传递一个 ref
 const InternalForm = React.forwardRef<FormInstance, FormProps>(FieldForm) as <Values = any>(
   props: FormProps<Values> & { ref?: React.Ref<FormInstance<Values>> },
 ) => React.ReactElement;
